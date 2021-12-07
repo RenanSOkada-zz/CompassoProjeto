@@ -21,11 +21,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	// Configuracoes de Autorizacao
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	http.authorizeRequests()
-	.antMatchers("/produtos").permitAll()
+	http.csrf().disable().authorizeRequests()
 	.antMatchers("/").permitAll()
-	.antMatchers(HttpMethod.POST, "/produtos").permitAll()
-	.antMatchers(HttpMethod.POST, "/").permitAll();	
+	;	
 	}
 
 	// Configuracoes de recursos estaticos (js, css, imagens, etc...)
