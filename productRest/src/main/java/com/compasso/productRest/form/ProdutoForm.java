@@ -1,6 +1,8 @@
 package com.compasso.productRest.form;
 
 import com.compasso.productRest.modelo.Produto;
+import com.compasso.productRest.repository.ProdutoRepository;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -10,12 +12,12 @@ public class ProdutoForm {
 
 	@NotNull
 	@NotEmpty
-	@Length(min = 5)
+	@Length(min = 1)
 	private String descricao;
 
 	@NotNull
 	@NotEmpty
-	@Length(min = 5)
+	@Length(min = 1)
 	private String nome;
 
 	@NotNull
@@ -60,6 +62,16 @@ public class ProdutoForm {
 
 	public Produto converter() {
 		return new Produto(descricao, nome, preco);
+	}
+
+	public Produto atualizar(Long id, ProdutoRepository produtoRepository) {
+		Produto produto = produtoRepository.getById(id);
+		
+		produto.setDescricao(this.descricao);
+		produto.setNome(this.nome);
+		produto.setPreco(this.preco);
+		
+		return produto;
 	}
 
 }
