@@ -1,7 +1,6 @@
 package com.compasso.productRest.config.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -29,5 +28,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	// Configuracoes de recursos estaticos (js, css, imagens, etc...)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+		web.ignoring()
+        .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
 	}
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -46,6 +47,20 @@ public class ProdutosController {
 
 	}
 
+	@GetMapping("/search")
+	public List<ProdutoDto> procurar(@RequestParam String q, @RequestParam  double minPricedb,
+			@RequestParam  double maxPricedb) {
+		List<Produto> produtos = produtoRepository.findUsingFilters(q, minPricedb, maxPricedb);
+
+		for (Produto produto : produtos) {
+			boolean comparador = compararPrecos(minPricedb, maxPricedb, produto);
+			if (comparador) {
+				return ProdutoDto.converter(produtos);
+			}
+		}
+		return null;
+	}
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
@@ -68,7 +83,7 @@ public class ProdutosController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<ProdutoDto> atualizat(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
+	public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
 
 		Optional<Produto> optional = produtoRepository.findById(id);
 		if (optional.isPresent()) {
@@ -91,4 +106,9 @@ public class ProdutosController {
 
 	}
 
+	
+	private boolean compararPrecos(double minPricedb, double maxPricedb, Produto produto) {
+		boolean b = produto.getPreco() >= minPricedb && produto.getPreco() <= maxPricedb;
+		return b;
+	}
 }

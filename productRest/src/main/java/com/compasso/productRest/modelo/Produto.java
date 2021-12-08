@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Produto {
@@ -15,8 +14,6 @@ public class Produto {
 	private String descricao;
 	private String nome;
 	private double preco;
-	@ManyToOne
-	private Usuario autor;
 
 	public Produto() {
 	}
@@ -27,13 +24,6 @@ public class Produto {
 		this.preco = preco;
 	}
 
-	public Usuario getAutor() {
-		return autor;
-	}
-
-	public void setAutor(Usuario autor) {
-		this.autor = autor;
-	}
 
 	public Long getId() {
 		return id;
