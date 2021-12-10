@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,13 +26,19 @@ import com.compasso.productRest.form.ProdutoForm;
 import com.compasso.productRest.modelo.Produto;
 import com.compasso.productRest.repository.ProdutoRepository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/produtos")
+@Api(value="API REST Controller Produtos")
 public class ProdutosController {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
 
+	@ApiOperation(value="Retorna uma lista de Produtos ou o nome de um produto especifico")
 	@GetMapping
 	public List<ProdutoDto> lista(String nome) {
 
@@ -46,7 +53,8 @@ public class ProdutosController {
 		}
 
 	}
-
+	
+	@ApiOperation(value="Retorna um filtro search personalizado")
 	@GetMapping("/search")
 	public List<ProdutoDto> procurar(@RequestParam String q, @RequestParam  double minPricedb,
 			@RequestParam  double maxPricedb) {
@@ -61,6 +69,7 @@ public class ProdutosController {
 		return null;
 	}
 
+	@ApiOperation(value="Salva um produto")
 	@PostMapping
 	@Transactional
 	public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
@@ -71,6 +80,7 @@ public class ProdutosController {
 		return ResponseEntity.created(uri).body(new ProdutoDto(produto));
 	}
 
+	@ApiOperation(value="Retorna um produto unico")
 	@GetMapping("/{id}")
 	public ResponseEntity<ProdutoDto> detalhar(@PathVariable Long id) {
 		Optional<Produto> optional = produtoRepository.findById(id);
@@ -81,6 +91,7 @@ public class ProdutosController {
 		return ResponseEntity.notFound().build();
 	}
 
+	@ApiOperation(value="Atualiza um produto")
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
@@ -93,6 +104,7 @@ public class ProdutosController {
 		return ResponseEntity.notFound().build();
 	}
 
+//	@ApiOperation(value="Deleta um produto")
 	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<?> excluir(@PathVariable Long id) {
